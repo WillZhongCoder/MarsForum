@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>New Post</h1>
+    <form method="POST" name="form1">
+        <label>Title</label>
+        <input class="title_input" type="text" name="title" required>
+        <label>Content</label>
+        <div id="editor—wrapper">
+            <div id="toolbar-container"><!-- 工具栏 --></div>
+            <div id="editor-container"><!-- 编辑器 --></div>
+        </div>
+        <input type="hidden" name="content" id="content" value="">
+        <label for="topic">Topic</label>
+        <input type="text" name="topic" id="topic" required>
+        <small>Split different tags with ';'</small>
+        <input type="button" onclick="submitPost()" class="button" value="Submit">
+    </form>
+<script src="https://unpkg.com/@wangeditor/editor@latest/dist/index.js"></script>
+<script>
+    const { createEditor, createToolbar } = window.wangEditor
+
+    const editorConfig = {
+        placeholder: 'Type here...',
+        onChange(editor) {
+            const html = editor.getHtml()
+            console.log('editor content', html)
+            // 也可以同步到 <textarea>
+        },
+    }
+
+    const editor = createEditor({
+        selector: '#editor-container',
+        html: '<p><br></p>',
+        config: editorConfig,
+        mode: 'default', // or 'simple'
+    })
+
+    const toolbarConfig = {}
+
+    const toolbar = createToolbar({
+        editor,
+        selector: '#toolbar-container',
+        config: toolbarConfig,
+        mode: 'default', // or 'simple'
+    })
+</script>
+<script>
+// 提交帖子函数
+    function submitPost() {
+        // 获取编辑器中的HTML代码
+        const html = editor.getHtml();
+        // 获取编辑器中的文本
+        const text = editor.getText();
+        // 打印日志
+        console.log("IN")
+        // 将HTML代码赋值给content元素
+        document.getElementById("content").value = html;
+        // 提交表单
+        document.form1.submit();
+    }
+    window.onload = function load(){
+        document.getElementById("new_post").className="active";
+    }
+</script>
+{% endblock %}
+{% block add %}
+        <style>
+    .bot {
+        background-color: rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        border-radius: 25px;
+        border: 2px solid antiquewhite;
+        text-align: left;
+        max-width: 70%;
+        margin-left: 10px;
+        align-self: flex-start;
+        animation: slideUp 0.2s ease-out forwards;
+    }
+    .user {
+        background-color: rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        border-radius: 30px;
+        border: 2px solid antiquewhite;
+        text-align: right;
+        max-width: 70%;
+        margin-right: 10px;
+        align-self: flex-end;
+        animation: slideUp 0.2s ease-out forwards;
+    }
+    .chat-container {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        height: 400px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+    .input-container {
+        display: flex;
+        padding: 20px;
+    }
+    #user-input {
+        width: 100%;
+        height: 40px;
+        border-radius: 8px;
+        border: 2px solid antiquewhite;
+        background-color: rgba(78,176,247,0.4);
+        padding: 10px;
+    }
+</style>
+<div class="container">
+<h1>Chat With AI</h1>
+    <div class="chat-container" id="chat-container">
+    </div>
+    <div class="input-container">
+        <input type="text" id="user-input" placeholder="输入你的问题">
+        <button onclick="getRes()" class="button" style="margin-left:10px">发送</button>
+    </div>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/dark.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/languages/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.18/marked.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<script>
+    function copyToLeft(){
+
+    }
+// 定义一个异步函数getRes
+    async function getRes() {
+        // 获取聊天容器
+        var chatContainer = document.getElementById('chat-container');
+        // 获取用户输入
+        const userInput = document.getElementById('user-input').value;
+        // 如果用户输入为空，则返回
+        if (!userInput) return;
+        // 创建用户消息元素
+        var userMessage = document.createElement('p');
+        // 设置模型
+        var model = "deepseek-r1:14b";
+        // 设置用户消息内容
+        userMessage.innerText = userInput;
+        // 设置用户消息样式
+        userMessage.className = 'user';
+        // 将用户消息添加到聊天容器中
+        chatContainer.appendChild(userMessage);
+        // 获取历史机器人消息
+        var hisBot = document.getElementsByClassName('bot');
+        // 创建历史机器人消息列表
+        var hisBotLst = [];
+        // 遍历历史机器人消息列表，将消息内容添加到列表中
+        for(var i = 0;i < hisBot.length; i++){
+            hisBotLst.push(hisBot[i].innerText)
+        }
+        // 获取历史用户消息
+        var hisUser = document.getElementsByClassName('user');
+        // 创建历史用户消息列表
+        var hisUserLst = [];
+        // 遍历历史用户消息列表，将消息内容添加到列表中
+        for(var i = 0;i < hisUser.length; i++){
+            hisUserLst.push(hisUser[i].innerText)
+        }
+        // 创建历史消息列表
+        var his = [];
+        // 遍历历史用户消息列表和历史机器人消息列表，将消息内容添加到历史消息列表中
+        for(var i = 0;i < hisUserLst.length; i++){
+            if(hisUserLst.length>i) if(!hisUserLst[i].empty) his.push({"role":"user","content":hisUserLst[i]});
+            if(hisBotLst.length>i) if(!hisBotLst[i].empty) his.push({"role":"assistant","content":hisBotLst[i]});
+        }
+        // 截取历史消息列表的最后5条
+        his = his.slice(-5);
+        // 创建表单数据
+        var form = new FormData();
+        // 将模型添加到表单数据中
+        form.append("model",model);
+        // 将历史消息列表添加到表单数据中
+        form.append("history",JSON.stringify(his));
+        // 发送POST请求
+        const res = await
+            fetch('/api/gpt', {
+                method: 'POST',
+                body: form
+            })
+        // 获取响应体读取器
+        const reader = res.body.getReader();
+        // 创建文本解码器
+        const decoder = new TextDecoder();
+        // 创建机器人消息元素
+        var botMessage = document.createElement('p');
+        // 创建机器人消息文本元素
+        var botText = document.createElement('p')
+        // 设置机器人消息文本内容为空
+        botText.innerText = "";
+        // 设置机器人消息文本样式为隐藏
+        botText.style = "display: none";
+        // 设置机器人消息内容为空
+        botMessage.innerText = "";
+        // 设置机器人消息样式
+        botMessage.className = 'bot';
+        // 将机器人消息添加到聊天容器中
+        chatContainer.appendChild(botMessage);
+        // 设置markdown解析和代码高亮
+        marked.setOptions({
+            highlight: function (code, language) {
+                const validLanguage = hljs.getLanguage(language) ? language : 'javascript';
+                return hljs.highlight(code, {language: validLanguage}).value;
+            },
+        });
+        // 循环读取响应体
+        while(1) {
+            // 读取响应体
+            const {done, value} = await reader.read();
+            // 如果读取完毕，则跳出循环
+            if (done) break;
+            // 解码响应体
+            const text = decoder.decode(value);
+            // 将解码后的文本添加到机器人消息文本中
+            botText.innerText+=text;
+            // 将机器人消息文本解析为html，并添加到机器人消息中
+            botMessage.innerHTML=marked.marked(botText.innerText)+"<button onclick='copyToLeft()'>copy</button>"
+            // 将聊天容器滚动到底部
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        //markdown解析，代码高亮设置
+    }
+</script>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+    <div style="text-align: center">
+        <img src="/static/images/icon.png" alt="None"><h1>Mars Forum</h1>
+    </div>
+    <form action="{{ url_for('search') }}" method="GET">
+        <input type="text" name="query" placeholder="Search" value="{{ query }}">
+        <button type="submit">Search</button>
+    </form>
+    {% for post in posts %}
+        <a href="{{url_for('view_post',post_id=post.id)}}" class="atxt">
+            <article style="border: 10px solid rgba(173, 216, 230, 0.2); border-radius: 10px; background-color: rgba(80, 80, 80, 0.2); padding-left: 20px; margin-bottom: 20px; padding-bottom: 15px">
+                <h2>{{ post.title }}</h2>
+                <small>Posted by {{ post.author.username }}<img src="../static/images/user/{{post.author.image_file}}" style="width:24px; height:24px; margin-bottom:-14px;">on {{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+                {% for tag in post.topic.split(';') %}
+                    <small class="tag">{{ tag }}</small>
+                {% endfor %}
+            </article>
+        </a>
+    {% endfor %}
+{% endblock %}
+{% block add %}
+    <div class="container">
+            {% if current_user.is_authenticated %}
+            <div>
+                <div style="display:flex; align-items: center">
+                    <a href="{{ url_for('profile_show', user_id=current_user.id) }}">
+                        <img src="../static/images/user/{{ current_user.image_file }}" style="width:40px; height:40px;" alt="">
+                    </a>
+                    <div>
+                        <div>
+                            Hello, {{ current_user.username }}
+                        </div>
+                        <div class="dropdown">
+                            <div class="dropbtn">Account Operations</div>
+                            <div class="dropdown-content">
+                                <a href="{{ url_for("profile_show") }}">Profile</a>
+                                <a href="{{ url_for("logout") }}"><span style="color:rgba(255, 200, 200)">Logout</span>  ></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <p>Please Login First</p>
+            {% endif %}
+    </div>
+    <div class="container">
+        <p style="color:white; text-align: center; font-family: 'Apple Braille',sans-serif; border-radius: 5px">You Have <span style="font-size: 20px; color: red;"><strong>{{ user_post|length }}</strong></span> posts</p>
+        {% for post in user_post %}
+            <a href="{{url_for('view_post',post_id=post.id)}}" class="atxt" style="padding-top: 10px">
+                <article style="border: 10px solid rgba(173, 216, 230, 0.2); border-radius: 10px; background-color: rgba(80, 80, 80, 0.2); padding-left: 20px; margin-bottom: 20px; padding-bottom: 15px">
+                    <h2>{{ post.title }}</h2>
+                    <small>Posted by {{ post.author.username }}<img src="../static/images/user/{{post.author.image_file}}" style="width:24px; height:24px; margin-bottom:-14px;">on {{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+                    {% for tag in post.topic.split(';') %}
+                        <small class="tag">{{ tag }}</small>
+                    {% endfor %}
+                </article>
+            </a>
+            <a class="button" href="{{ url_for('delete_post', post_id=post.id) }}" style="padding-bottom: 10px">Delete</a>
+        {% endfor %}
+    </div>
+<script>
+    window.onload = function load(){
+        document.getElementById("home").className="active";
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .bot {
+        background-color: rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        border-radius: 25px;
+        border: 2px solid antiquewhite;
+        text-align: left;
+        max-width: 70%;
+        margin-left: 10px;
+        align-self: flex-start;
+        animation: slideUp 0.2s ease-out forwards;
+    }
+    .user {
+        background-color: rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        border-radius: 30px;
+        border: 2px solid antiquewhite;
+        text-align: right;
+        max-width: 70%;
+        margin-right: 10px;
+        align-self: flex-end;
+        animation: slideUp 0.2s ease-out forwards;
+    }
+    .chat-container {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        height: 400px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+    .input-container {
+        display: flex;
+        padding: 20px;
+    }
+    #user-input {
+        width: 100%;
+        height: 40px;
+        border-radius: 8px;
+        border: 2px solid antiquewhite;
+        background-color: rgba(78,176,247,0.4);
+        padding: 10px;
+    }
+</style>
+<h1>Chat With AI</h1>
+    <div class="chat-container" id="chat-container">
+    </div>
+    <div class="input-container">
+        <input type="text" id="user-input" placeholder="输入你的问题">
+        <button onclick="getRes()" class="button">发送</button>
+    </div>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/dark.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/languages/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.18/marked.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<script>
+    async function getRes() {
+        var chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input').value;
+        if (!userInput) return;
+        var userMessage = document.createElement('p');
+        var model = document.getElementById('model').value;
+        userMessage.innerText = userInput;
+        userMessage.className = 'user';
+        chatContainer.appendChild(userMessage);
+        var hisBot = document.getElementsByClassName('bot');
+        var hisBotLst = [];
+        for(var i = 0;i < hisBot.length; i++){
+            hisBotLst.push(hisBot[i].innerText)
+        }
+        var hisUser = document.getElementsByClassName('user');
+        var hisUserLst = [];
+        for(var i = 0;i < hisUser.length; i++){
+            hisUserLst.push(hisUser[i].innerText)
+        }
+        var his = [];
+        for(var i = 0;i < hisUserLst.length; i++){
+            if(hisUserLst.length>i) if(!hisUserLst[i].empty) his.push({"role":"user","content":hisUserLst[i]});
+            if(hisBotLst.length>i) if(!hisBotLst[i].empty) his.push({"role":"assistant","content":hisBotLst[i]});
+        }
+        his = his.slice(-5);
+        var form = new FormData();
+        form.append("model",model);
+        form.append("history",JSON.stringify(his));
+        const res = await
+            fetch('/api/gpt', {
+                method: 'POST',
+                body: form
+            })
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        var botMessage = document.createElement('p');
+        var botText = document.createElement('p')
+        botText.innerText = "";
+        botText.style = "display: none";
+        botMessage.innerText = "";
+        botMessage.className = 'bot';
+        chatContainer.appendChild(botMessage);
+        marked.setOptions({
+            highlight: function (code, language) {
+                const validLanguage = hljs.getLanguage(language) ? language : 'javascript';
+                return hljs.highlight(code, {language: validLanguage}).value;
+            },
+        });
+        while(1) {
+            const {done, value} = await reader.read();
+            if (done) break;
+            const text = decoder.decode(value);
+            botMessage.innerHTML=marked.marked(botText.innerText)
+            botText.innerText+=text;
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        //markdown解析，代码高亮设置
+    }
+</script>
+<script>
+    window.onload = function load(){
+        document.getElementById("aichat").className="active";
+    }
+</script>
+
+{% endblock %}
+{% block add %}
+    <div class="container">
+        <label for="model">Choose a Model</label><select name="model" id="model" class="shortselect">
+            <option value="deepseek-r1:14b">Deepseek R1</option>
+            <option value="deepseek-coder-v2">Deepseek Coder V2</option>
+            <option value="llama3.2">Llama 3.2</option>
+            <option value="phi4">Phi 4</option>
+            <option value="qwen2.5:7b">Qwen 2.5</option>
+        </select>
+    </div>
+{% endblock %}

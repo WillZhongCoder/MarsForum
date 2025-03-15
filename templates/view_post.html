@@ -1,0 +1,50 @@
+x{% extends "base.html" %}
+{% block content %}
+    <article>
+        <h1 style="text-align:center;font-size:60px">{{ post.title }}</h1>
+        {{ content }}
+        <style>
+            #MathJax_Message {
+                display: none!important;
+            }
+        </style>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({
+            config: ["MMLorHTML.js"],
+                jax: ["input/TeX", "output/HTML-CSS", "output/NativeMML"],
+                extensions: ["MathMenu.js", "MathZoom.js"]
+            });
+        </script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+        <small style="text-align:left">Posted by {{ post.author.username }} on {{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+        <a href="{{url_for('edit_post', post_id=post.id)}}">Edit</a>
+    </article>
+{% endblock %}
+{% block add %}
+<div class="container">
+        <h2 style="text-align:center">Leave a comment</h2>
+        <form action="{{url_for('comment', post_id=post.id)}}" method="POST">
+            <textarea name="content" placeholder="Your comment here"></textarea>
+            <button type="submit">Post</button>
+        </form>
+</div>
+<div class="container">
+    <div class="comments">
+        <h2>Comments</h2>
+        {% for comment in comments %}
+            <div class="comment">
+                <p>{{ comment.content }}</p>
+                <small>Posted by {{ comment.auther.username }} on {{ comment.date_posted.strftime('%Y-%m-%d') }}</small>
+                {% if current_user.username == comment.auther.username or current_user.is_admin%}
+                    <a href="{{ url_for('delete_comment', comment_id=comment.id) }}" class="button">Delete</a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+<script>
+    window.onload = function load(){
+        document.getElementById("home").className="active";
+    }
+</script>
+{% endblock %}

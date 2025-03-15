@@ -1,0 +1,19 @@
+
+{% extends "base.html" %}
+{% block content %}
+<head>
+    <title>{{ user.username }}'s Profile</title>
+</head>
+<body>
+    <h1>{{ user.username }}'s Profile</h1>
+    <p><img src="../static/images/email.png" style="height:20px; width:20px"> Email: {{ user.email }}</p>
+    <h1>Image</h1>
+    <img src="../static/images/user/{{current_user.image_file}}" style="width:128px; height:128px;">
+    <a href="{{url_for('change_profile', user_id=user.id, type='image')}}" class="button">edit</a>
+</body>
+<script>
+    window.onload = function load(){
+        document.getElementById("home").className="active";
+    }
+</script>
+{% endblock %}

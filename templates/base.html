@@ -1,0 +1,61 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will Forum</title>
+    <link rel="shortcut icon" href="/static/images/icon.png">
+    <link
+            href="https://unpkg.com/@wangeditor/editor@latest/dist/css/style.css"
+            rel="stylesheet"
+    />
+    <style>
+        #editor—wrapper {
+            border: 1px solid #ccc;
+            z-index: 100; /* 按需定义 */
+        }
+        #toolbar-container {
+            border-bottom: 1px solid #ccc;
+            background-color: rgba(0,0,0,0.6);;
+        }
+        #editor-container {
+            height: 800px;
+        }
+        /* 暗色主题 */
+
+    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <nav id="nav">
+        <a href="{{ url_for('home') }}" id="home"><img src="/static/images/icon.png" >Mars Forum</a>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('new_post') }}" id="new_post"><img src="/static/images/plus.png" style="height:25px; width:25px">New Post</a>
+            <a href="{{ url_for('files') }}" id="files"><img src="/static/images/cloud.png">Cloud File Management</a>
+            <a href="{{ url_for('aichat') }}" id="aichat"><img src="/static/images/chat.png">AI Chat</a>
+            {% if current_user.is_admin %}
+                <a href="{{ url_for('admin') }}" id="admin"><img src="/static/images/admin.png">Admin</a>
+            {% endif %}
+        {% else %}
+            <a href="{{ url_for('login') }}" id="login"><img src="/static/images/login.png">Login</a>
+            <a href="{{ url_for('register') }}" id="register"><img src="/static/images/register.png">Register</a>
+        {% endif %}
+    </nav>
+    <div style="width: 80%; margin: 70px auto 10px; display: flex; padding: 10px">
+        <div style="padding:5px; width:70%">
+            <div class="container">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+        <div style="width:30%">
+            {% block add %}{% endblock %}
+        <div>
+    </div>
+</body>
+
+

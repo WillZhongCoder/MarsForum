@@ -1,0 +1,271 @@
+@font-face {
+  font-family: "Poppins-Light";
+  src: url("/static/fonts/Poppins-Light.woff2") format("woff2");
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(40%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(0,0);
+    opacity: 1;
+  }
+}
+
+body {
+    font-family: Poppins-Light, serif;
+    background-color: #455A64;
+    background-size: cover; /* 使背景图片覆盖整个页面 */
+    background-repeat: no-repeat; /* 防止背景图片重复 */
+    background-attachment: fixed; /* 固定背景图片，使其在滚动时保持位置不变 */
+}
+
+.icon {
+    height: 32px;
+    width: 32px;
+}
+
+.icon:hover {
+    /* 添加悬停效果 */
+}
+
+nav {
+    display: flex;
+    position: fixed;
+    width: 100%;
+    align-items: center;
+    top: 0; /* 确保导航栏始终在顶部 */
+    z-index: 1000; /* 设置较高的 z-index 值，确保导航栏在最上层 */
+}
+
+nav a {
+    height: 50px;
+    color: white;
+    text-decoration: none;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding:10px;
+    transition: background-color 0.6s ease;
+}
+
+nav a:hover {
+    background-color: rgba(90, 150, 200, 0.3); /* 浅蓝色 */
+    border-bottom: lightblue solid 2px;
+}
+
+nav a.active {
+    border-bottom:  solid 2px;
+}
+
+.container {
+    font-family: Poppins-Light, serif;
+    border-radius: 8px;
+    border: None;
+    color: white;
+    padding: 2rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin: 0 10px 2rem 10px;
+    box-shadow: rgba(0, 0, 0, 0.2) 10px 10px 10px;
+    animation: slideUp 0.7s ease-out forwards;
+}
+
+.alert {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    border-radius: 5px; /* 圆角边框 */
+    width: 80%; /* 宽度 */
+    margin: 10px auto; /* 居中 */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* 轻微阴影 */
+}
+
+form label {
+    margin-top: 0.5rem;
+}
+
+form input, form textarea {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    border-radius: 5px; /* 圆角边框 */
+    border: 5px solid rgba(173, 216, 230, 0.3);
+}
+
+button {
+    padding: 0.5rem;
+    margin: 10px 0;
+    background-color: #4682b4;
+    color: white;
+    border: none;
+    cursor: grab;
+    border-radius: 5px; /* 圆角边框 */
+    transition: background-color 0.8s ease;
+}
+
+button:hover {
+    background-color: #5a9bd3; /* 浅蓝色 */
+}
+
+code {
+    display: inline-block;
+    border: 1px solid black;
+    padding: 5px;
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.comment {
+    color: white;
+    font-style: italic;
+    font-size: 16px;
+    padding: 10px 20px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profile {
+    display: flex;
+    justify-content: center;
+    background-color: white;
+    border-radius: 8px; /* 圆角边框 */
+    width: 6%; /* 宽度 */
+    height: 40px; /* 高度 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 轻微阴影 */
+    position: fixed; /* 或者使用 absolute，根据需要选择 */
+    top: 10px; /* 距离顶部10px */
+    right: 10px; /* 距离右侧10px */
+}
+
+td {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+th {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+}
+
+textarea {
+    color: white;
+    background-color: rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease;
+}
+
+textarea:focus {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.title_input {
+    color: white;
+    background-color: rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease;
+}
+
+.title_input:focus {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+a img {
+    height: 32px;
+    width: 32px;
+    padding: 10px;
+}
+
+.tag{
+    background-color: rgba(85,216,255,0.49);
+    padding: 0.2rem;
+    border-radius: 5px;
+}
+
+.shortselect{
+    background:rgba(255, 255, 255, 0.9);
+    height:28px;
+    width:180px;
+    line-height:28px;
+    border:1px solid #9bc0dd;
+    -moz-border-radius:2px;
+    -webkit-border-radius:2px;
+    border-radius:2px;
+}
+
+.text-container {
+    display: inline-block;
+    opacity: 0;
+    transition: opacity 0.5s ease-out;
+}
+
+.text-container.show {
+    opacity: 1;
+}
+
+.file{
+    height: 50px;
+    width: 90%;
+    text-align: left;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    border-radius: 5px;
+    display: none;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.1);
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 9999;
+}
+
+.dropdown-content a {
+    color: white;
+    padding: 2px 6px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+

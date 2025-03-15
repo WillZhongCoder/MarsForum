@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<body>
+    <h1 style="text-align:center">Edit Post</h1>
+    <form method="POST">
+        <div>
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" value="{{ post.title }}">
+        </div>
+        <label for="content">Content:</label>
+        <div>
+            <textarea type="hidden" id="content" name="content" style="height: 300px; width: 100%">{{ post.content }}</textarea>
+        </div>
+        <label for="topic">Topic:</label>
+        <input type="text" id="topic" name="topic" value="{{ post.topic }}">
+        <input type="submit" value="Update Post" class="button">
+    </form>
+    <a href="{{ url_for('view_post', post_id=post.id) }}" class="button">Cancel</a>
+</body>
+<script>
+    window.onload = function load(){
+        document.getElementById("home").className="active";
+    }
+</script>
+{% endblock %}
