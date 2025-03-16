@@ -3,6 +3,8 @@ This is a project about a forum with Flask.
 
 ### Getting Started
 
+* This project is based on python 3.9.0, please do not use different version of python.
+
 To start, install the project with `pip install -r requirements.txt` and then run `python app.py`
 
 #### AI
